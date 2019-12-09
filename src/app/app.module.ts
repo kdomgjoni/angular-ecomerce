@@ -64,8 +64,12 @@ import { RouterModule } from '@angular/router';
           component: OrderSuccessComponent
         },
         {
+          path: 'my/orders',
+          component: MyOrdersComponent
+        },
+        {
           path: 'login',
-          component: LoginComponent
+          component: MyOrdersComponent
         },
         {
           path: 'admin/products',
