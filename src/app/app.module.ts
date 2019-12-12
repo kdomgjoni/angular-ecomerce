@@ -69,7 +69,7 @@ import { RouterModule } from '@angular/router';
         },
         {
           path: 'login',
-          component: MyOrdersComponent
+          component: LoginComponent
         },
         {
           path: 'admin/products',
