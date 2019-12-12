@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
@@ -9,11 +10,11 @@ import * as firebase from 'firebase/app';
 })
 export class BsNavbarComponent implements OnInit {
 
-	user: firebase.User;
+	user$: Observable<firebase.User>;
 
   constructor(private afAuth: AngularFireAuth) { 
-  	afAuth.authState.subscribe(user => this.user = user);
-  	console.log(firebase.User);
+  	this.user$ = afAuth.authState;
+  	
   }
 
   ngOnInit(){
