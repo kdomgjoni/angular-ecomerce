@@ -23,6 +23,7 @@ import { LoginComponent } from './login/login.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth-guard.service';
+import { AdminAuthGuard } from './admin-auth-guard.service';
 import { UserService } from './user.service';
 
 @NgModule({
@@ -81,18 +82,19 @@ import { UserService } from './user.service';
         {
           path: 'admin/products',
           component: AdminProductsComponent,
-          canActivate: [AuthGuard]
+          canActivate: [AuthGuard, AdminAuthGuard]
         },
         {
           path: 'admin/orders',
           component: AdminOrdersComponent,
-          canActivate: [AuthGuard]
+          canActivate: [AuthGuard, AdminAuthGuard]
         },
     ])
   ],
   providers: [
     AuthService,
     AuthGuard,
+    AdminAuthGuard,
     UserService,
     AngularFireDatabase
   ],
