@@ -13,6 +13,7 @@ export class UserService {
 
   constructor(private db: AngularFireDatabase) { }
 
+  //saving a new use object to firebase
   save(user: firebase.User){
   	this.db.object('/users/' + user.uid).update({
   		name: user.displayName,
@@ -20,6 +21,7 @@ export class UserService {
   	});
   }
 
+  //get the user. this method can test if the user is admin or not
   get(uid: string): AngularFireObject<AppUser>{
   	return this.db.object('/users/' + uid);
   }

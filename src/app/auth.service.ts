@@ -13,21 +13,26 @@ export class AuthService {
 	user$: Observable<firebase.User>;
 
   constructor(private afAuth: AngularFireAuth, private route: ActivatedRoute, private userService: UserService) {
+    
+    //getting the state of the user. This is an Observale.
   	this.user$ = afAuth.authState;
   }
 
 
   login(){
+    //get the url and save it to local Storage
   	let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
   	localStorage.setItem('returnUrl', returnUrl);
-  	
+    
+    
   	this.afAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
   }
   logout(){
   	this.afAuth.auth.signOut(); 
   }
 
-
+  //We have an observable that returns AppUser Object
+  //We are using sitchMap to map a new(other) observable ore to switch to another one
   get appUser$(): Observable<AppUser>{
     return this.user$ 
       .pipe(switchMap(user => {

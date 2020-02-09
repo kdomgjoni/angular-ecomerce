@@ -13,8 +13,10 @@ export class AppComponent {
 	constructor(private userService: UserService, private auth: AuthService, router: Router){
 		auth.user$.subscribe(user => {
 			if(user){
+				//saving the new user  to firebase
 				userService.save(user);
 
+				//redirect the user to specific page by url
 				let returnUrl = localStorage.getItem('returnUrl');
 				router.navigateByUrl(returnUrl);
 			}
