@@ -36,7 +36,9 @@ export class AuthService {
   get appUser$(): Observable<AppUser>{
     return this.user$ 
       .pipe(switchMap(user => {
+        //Check if there is a User because will thrwo error for null user.
         if(user) return this.userService.get(user.uid).valueChanges();
+
 
         return of(null);
       }));
