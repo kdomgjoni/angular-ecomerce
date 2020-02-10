@@ -26,6 +26,7 @@ import { AuthGuard } from './auth-guard.service';
 import { AdminAuthGuard } from './admin-auth-guard.service';
 import { UserService } from './user.service';
 import { ProductFormComponent } from './admin/product-from/product-from.component';
+import { CategoryService } from './category.service';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { ProductFormComponent } from './admin/product-from/product-from.componen
     AuthGuard,
     AdminAuthGuard,
     UserService,
-    AngularFireDatabase
+    AngularFireDatabase,
+    CategoryService
   ],
   bootstrap: [AppComponent]
 })
