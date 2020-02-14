@@ -12,7 +12,15 @@ export class ProductService {
    return this.db.list('/products').push(product);
   }
 
+
+  //Getting the products form firebase
   getAll(){
     return this.db.list('/products');
   }
+
+  //Getting this products id from firebase
+  get(productId){
+    return this.db.object('/products/' + productId);
+  }
+
 }
