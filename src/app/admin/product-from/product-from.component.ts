@@ -12,7 +12,7 @@ import { take, map } from "rxjs/operators";
 export class ProductFormComponent implements OnInit {
   categories$;
   product = {};
-
+  id;
 
   constructor(
     private router: Router,
@@ -25,18 +25,23 @@ export class ProductFormComponent implements OnInit {
 
 
     //get the id from the url
-    let id = this.route.snapshot.paramMap.get('id');
+    this.id = this.route.snapshot.paramMap.get('id');
     
-    if (id) {
+    if (this.id) {
       //observe the ID to reference for specific product
-      this.productService.get(id).valueChanges().subscribe(p => this.product = p);
+      this.productService.get(this.id).valueChanges().subscribe(p => this.product = p);
     }
   }
   
 
   save(product){
-    this.productService.create(product);
+    if(this.id){
+      this.productService.update(this.id, product);
+    }else{
+      this.productService.create(product);
+    }
     this.router.navigate(['/admin/products']);
+    
   }
 
   

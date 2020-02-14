@@ -23,4 +23,9 @@ export class ProductService {
     return this.db.object('/products/' + productId);
   }
 
+  //Updating the existing product
+  update(productId, product){
+    return this.db.object('/products/' + productId).update(product);
+  }
+
 }
