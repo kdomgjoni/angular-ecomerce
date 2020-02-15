@@ -11,12 +11,12 @@ import { Product } from 'src/app/models/products';
   styleUrls: ['./admin-products.component.css']
 })
 export class AdminProductsComponent implements OnInit, OnDestroy{
-  products: any[];
+  products: Product[];
   filteredProducts: any[];
   subscription: Subscription;
   constructor(private productService: ProductService) { 
     //We using snapshotChanges to access the ID and values from template
-    this.subscription = this.productService.getAll().snapshotChanges().subscribe(products => this.filteredProducts = this.products = products);
+    this.subscription = this.productService.getAll().subscribe(products => this.filteredProducts = this.products = products);
   }
 
 
