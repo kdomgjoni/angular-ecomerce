@@ -51,7 +51,6 @@ import { CustomFormsModule } from 'ng2-validation';
     CustomFormsModule,
     BrowserModule,
     FormsModule,
- 
     NgbModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // firestore
