@@ -29,7 +29,7 @@ export class ProductFormComponent implements OnInit {
     
     if (this.id) {
       //observe the ID to reference for specific product
-      this.productService.get(this.id).valueChanges().subscribe(p => this.product = p);
+      this.productService.get(this.id).valueChanges().pipe(take(1)).subscribe(p => this.product = p);
     }
   }
   
