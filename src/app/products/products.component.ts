@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../product.service';
-import { CategoryService } from '../category.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../models/products';
 import { switchMap } from 'rxjs/operators';
@@ -16,12 +15,10 @@ export class ProductsComponent{
   categories$;
   category: string;
 
-  constructor(private productService: ProductService, 
-    private categoryService: CategoryService,
+  constructor(
+    private productService: ProductService, 
     private route: ActivatedRoute) 
     { 
-
-      this.categories$ = this.categoryService.getCategories();
       //with switchMap we can switch from one observable to another
       this.productService.getAll().pipe(switchMap(products => {
         this.products = products;
@@ -36,8 +33,6 @@ export class ProductsComponent{
             this.products.filter(p => p.category === this.category) : 
             this.products;
         });
-      
-      
   }
 
 }
