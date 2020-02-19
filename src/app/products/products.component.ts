@@ -3,6 +3,7 @@ import { ProductService } from '../product.service';
 import { CategoryService } from '../category.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../models/products';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-products',
@@ -19,17 +20,24 @@ export class ProductsComponent{
     private categoryService: CategoryService,
     private route: ActivatedRoute) 
     { 
-      this.productService.getAll().subscribe(products => this.products = products);
-      this.categories$ = this.categoryService.getCategories();
 
-    //We can't use snapshot here becaus the url changes in the DOM so we have to subscribe
-      this.route.queryParamMap.subscribe(param => {
-        this.category = param.get('category');
-        this.filteredProduct = (this.category) ?
-          this.products.filter(p => p.category === this.category) : 
-          this.products;
-        console.log(this.filteredProduct)
-      })
+      this.categories$ = this.categoryService.getCategories();
+      //with switchMap we can switch from one observable to another
+      this.productService.getAll().pipe(switchMap(products => {
+        this.products = products;
+        //after first subscribe switch to this one and return the results of secons observable
+        return route.queryParamMap;
+        }))
+
+        //We can't use snapshot here becaus the url changes in the DOM so we have to subscribe
+        .subscribe(param => {
+          this.category = param.get('category');
+          this.filteredProduct = (this.category) ?
+            this.products.filter(p => p.category === this.category) : 
+            this.products;
+        });
+      
+      
   }
 
 }
