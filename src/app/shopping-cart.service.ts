@@ -35,19 +35,24 @@ export class ShoppingCartService {
     
   }
 
+  private getItem(cartId, producId){
+    return this.db.object('/shopping-carts/' + cartId + '/items/' + producId);
+
+  }
+
   // Because the "getOrCreateCartId()" method is observable and return a promise we can use async or "then"
   async addToCart(product: Product){
     const cartId = await this.getOrCreateCartId();
-    const item$ = this.db.object('/shopping-carts/' + cartId + '/items/' + product.key);
-
+    const item$ = this.getItem(cartId, product.key);
     item$.valueChanges().pipe(take(1))
     .subscribe(item => {
       if (item) {
-        item$.update({quantity: item['quantity'] + 1});
+        item$.update({product: product, quantity: item['quantity'] + 1});
       } else {
         item$.set({ product: product, 
           quantity: 1 });
       }
+     
     });
 
   }
