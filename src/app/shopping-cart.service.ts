@@ -20,12 +20,13 @@ export class ShoppingCartService {
   }
 
   
-  private getCart(cartId){
-    this.db.object('/shopping-cart' + cartId);
+  async getCart(){
+    let cartId = await this.getOrCreateCartId();
+    return this.db.object('/shopping-carts/' + cartId).valueChanges();
   }
 
   //"async - awit" is the same like "then" promises
-  private async getOrCreateCartId(){
+  private async getOrCreateCartId(): Promise<String>{
     let cartId = localStorage.getItem('cartId');
     if(cartId) return cartId
     
