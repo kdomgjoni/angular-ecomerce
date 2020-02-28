@@ -2,6 +2,8 @@ import { AuthService } from './../auth.service';
 import { Component, OnInit } from '@angular/core';
 import { AppUser } from './../models/app-user';
 import { ShoppingCartService } from '../shopping-cart.service';
+import { Observable } from 'rxjs';
+import { ShoppingCart } from '../models/shopping-cart';
 
 
 @Component({
@@ -11,7 +13,7 @@ import { ShoppingCartService } from '../shopping-cart.service';
 })
 export class BsNavbarComponent implements OnInit {
   appUser: AppUser;
-  shoppingCartItemCount: number;
+  cart$: Observable<ShoppingCart>;
 
   constructor(private auth: AuthService, private shoppingCartSerevice: ShoppingCartService) { 
     
@@ -21,15 +23,10 @@ export class BsNavbarComponent implements OnInit {
       //Subcribe user here and we dont have to use the pipe in template
       this.auth.appUser$.subscribe(appUser => this.appUser = appUser);
       
-      let cart$ = await this.shoppingCartSerevice.getCart();
+      this.cart$ = await this.shoppingCartSerevice.getCart();
+
+     
       
-      cart$.subscribe(cart => {
-        this.shoppingCartItemCount = 0;
-        
-        for (let productId in cart.items){
-          this.shoppingCartItemCount += cart.items[productId].quantity;
-        }
-      });
   }
   logout(){
   	this.auth.logout();

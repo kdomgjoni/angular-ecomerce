@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { create } from 'domain';
 import { Product } from './models/products';
-import { take } from 'rxjs/operators';
+import { take, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FirebaseObjectObservable } from '@angular/fire/database-deprecated';
 import { ShoppingCart } from './models/shopping-cart';
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +23,10 @@ export class ShoppingCartService {
   }
 
   
-  async getCart(): Promise<FirebaseObjectObservable<ShoppingCart>>{
+  async getCart(): Promise<Observable<ShoppingCart>>{
     let cartId = await this.getOrCreateCartId();
-    return this.db.object('/shopping-carts/' + cartId).valueChanges();
+    return this.db.object('/shopping-carts/' + cartId).snapshotChanges()
+  .pipe(map(x => new ShoppingCart(x.payload.exportVal().items)));
   }
 
   //"async - awit" is the same like "then" promises
