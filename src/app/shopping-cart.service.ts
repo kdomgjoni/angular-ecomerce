@@ -4,6 +4,8 @@ import { create } from 'domain';
 import { Product } from './models/products';
 import { take } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { FirebaseObjectObservable } from '@angular/fire/database-deprecated';
+import { ShoppingCart } from './models/shopping-cart';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,7 @@ export class ShoppingCartService {
   }
 
   
-  async getCart(){
+  async getCart(): Promise<FirebaseObjectObservable<ShoppingCart>>{
     let cartId = await this.getOrCreateCartId();
     return this.db.object('/shopping-carts/' + cartId).valueChanges();
   }
