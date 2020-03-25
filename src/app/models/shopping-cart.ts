@@ -16,8 +16,7 @@ export class ShoppingCart{
     get totalPrice(){
       var sum = 0;
       for (let productId in this.items){
-        sum += this.items[productId].product.price;   
-        console.log(this.items[productId]);     
+        sum += this.items[productId].totalPrice;    
       }
       
       return sum;
@@ -39,4 +38,6 @@ export class ShoppingCart{
     
        return item ? item.quantity : 0;
     }
+
+    
 }
