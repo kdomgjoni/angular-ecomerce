@@ -47,24 +47,35 @@ export class ShoppingCartService {
 
   // Because the "getOrCreateCartId()" method is observable and return a promise we can use async or "then"
   async addToCart(product: Product){
-    this.updateItemQuantity(product, 1);
+    this.updateItem(product, 1);
 
   }
 
   async removeFromCart(product: Product){
-    this.updateItemQuantity(product, -1);
+    this.updateItem(product, -1);
   }
 
-  private async updateItemQuantity(product: Product, change: number){
+  private async updateItem(product: Product, change: number){
     const cartId = await this.getOrCreateCartId();
     const item$ = this.getItem(cartId, product.key);
     item$.valueChanges().pipe(take(1))
     .subscribe(item => {
       if (item) {
-        item$.update({product: product, quantity: item['quantity'] + change});
+        item$.update({
+          //product: product, 
+          title: product.title,
+          imageUrl: product.imageUrl,
+          price: product.price,
+          quantity: item['quantity'] + change
+        });
       } else {
-        item$.set({ product: product, 
-          quantity: 1 });
+        item$.set({ 
+          //product: product,
+          title: product.title,
+          imageUrl: product.imageUrl,
+          price: product.price, 
+          quantity: 1 
+        });
       }
     });
   }
