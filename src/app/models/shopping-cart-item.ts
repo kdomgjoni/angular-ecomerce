@@ -6,6 +6,7 @@ export class ShoppingCartItem{
     imageUrl: string;
     price: number;
     quantity: number;
+  key: string;
   
 
     get totalPrice(){

@@ -12,7 +12,7 @@ export class ShoppingCart{
         let item = itemsMap[productId];
         let x = new ShoppingCartItem();
         Object.assign(x, item);
-        x.$key = productId;
+        x.key = productId;
         this.items.push(x);
       }
     }
