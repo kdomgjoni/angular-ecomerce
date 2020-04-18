@@ -15,6 +15,25 @@ export class ShoppingCartService {
 
   constructor(private db: AngularFireDatabase) { }
 
+  async getCart(): Promise<Observable<ShoppingCart>>{
+    let cartId = await this.getOrCreateCartId();
+    return this.db.object('/shopping-carts/' + cartId).snapshotChanges()
+  .pipe(map(x => new ShoppingCart(x.payload.exportVal().items)));
+  }
+
+  async addToCart(product: Product){
+    this.updateItem(product, 1);
+
+  }
+
+  async removeFromCart(product: Product){
+    this.updateItem(product, -1);
+  }
+
+  async clearCart(){
+    let cartId = await this.getOrCreateCartId();
+    this.db.object('/shopping-carts/' + cartId + '/items').remove();
+  }
 
   private create(){
     return this.db.list('/shopping-carts').push({
@@ -23,11 +42,7 @@ export class ShoppingCartService {
   }
 
   
-  async getCart(): Promise<Observable<ShoppingCart>>{
-    let cartId = await this.getOrCreateCartId();
-    return this.db.object('/shopping-carts/' + cartId).snapshotChanges()
-  .pipe(map(x => new ShoppingCart(x.payload.exportVal().items)));
-  }
+  
 
   //"async - awit" is the same like "then" promises
   private async getOrCreateCartId(): Promise<String>{
@@ -46,14 +61,7 @@ export class ShoppingCartService {
   }
 
   // Because the "getOrCreateCartId()" method is observable and return a promise we can use async or "then"
-  async addToCart(product: Product){
-    this.updateItem(product, 1);
-
-  }
-
-  async removeFromCart(product: Product){
-    this.updateItem(product, -1);
-  }
+ 
 
   private async updateItem(product: Product, change: number){
     const cartId = await this.getOrCreateCartId();
