@@ -68,23 +68,32 @@ export class ShoppingCartService {
     const item$ = this.getItem(cartId, product.key);
     item$.valueChanges().pipe(take(1))
     .subscribe(item => {
-      if (item) {
-        item$.update({
-          //product: product, 
-          title: product.title,
-          imageUrl: product.imageUrl,
-          price: product.price,
-          quantity: item['quantity'] + change
-        });
-      } else {
-        item$.set({ 
-          //product: product,
-          title: product.title,
-          imageUrl: product.imageUrl,
-          price: product.price, 
-          quantity: 1 
-        });
-      }
+      let quantity = item(['quantity']) + change;
+      if(quantity === 0) item$.remove();
+      else  item$.update({
+        //product: product, 
+        title: product.title,
+        imageUrl: product.imageUrl,
+        price: product.price,
+        quantity: quantity
+      });
+      // if (item) {
+      //   item$.update({
+      //     //product: product, 
+      //     title: product.title,
+      //     imageUrl: product.imageUrl,
+      //     price: product.price,
+      //     quantity: quantity
+      //   });
+      // } else {
+      //   item$.set({ 
+      //     //product: product,
+      //     title: product.title,
+      //     imageUrl: product.imageUrl,
+      //     price: product.price, 
+      //     quantity: 1 
+      //   });
+      // }
     });
   }
 }
