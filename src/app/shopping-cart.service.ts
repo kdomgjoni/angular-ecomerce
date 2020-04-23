@@ -15,10 +15,10 @@ export class ShoppingCartService {
 
   constructor(private db: AngularFireDatabase) { }
 
-  async getCart(): Promise<Observable<ShoppingCart>>{
+  async getCart(): Promise<Observable<ShoppingCart>> {
     let cartId = await this.getOrCreateCartId();
-    return this.db.object('/shopping-carts/' + cartId).snapshotChanges()
-  .pipe(map(x => new ShoppingCart(x.payload.exportVal().items)));
+    return this.db.object('/shopping-carts/' + cartId).valueChanges()
+      .pipe(map((x:any) => new ShoppingCart(x.items)));
   }
 
   async addToCart(product: Product){
@@ -68,32 +68,33 @@ export class ShoppingCartService {
     const item$ = this.getItem(cartId, product.key);
     item$.valueChanges().pipe(take(1))
     .subscribe(item => {
-      let quantity = item(['quantity']) + change;
+      let quantity = item['quantity'] + change;
       if(quantity === 0) item$.remove();
-      else  item$.update({
-        //product: product, 
-        title: product.title,
-        imageUrl: product.imageUrl,
-        price: product.price,
-        quantity: quantity
-      });
-      // if (item) {
-      //   item$.update({
-      //     //product: product, 
-      //     title: product.title,
-      //     imageUrl: product.imageUrl,
-      //     price: product.price,
-      //     quantity: quantity
-      //   });
-      // } else {
-      //   item$.set({ 
-      //     //product: product,
-      //     title: product.title,
-      //     imageUrl: product.imageUrl,
-      //     price: product.price, 
-      //     quantity: 1 
-      //   });
-      // }
+      
+      // else item$.update({
+      //   //product: product, 
+      //   title: product.title,
+      //   imageUrl: product.imageUrl,
+      //   price: product.price,
+      //   quantity: quantity
+      // });
+      if (item) {
+        item$.update({
+          //product: product, 
+          title: product.title,
+          imageUrl: product.imageUrl,
+          price: product.price,
+          quantity: quantity
+        });
+      } else {
+        item$.set({ 
+          //product: product,
+          title: product.title,
+          imageUrl: product.imageUrl,
+          price: product.price, 
+          quantity: 1 
+        });
+      }
     });
   }
 }
