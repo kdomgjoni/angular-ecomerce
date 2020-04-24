@@ -15,11 +15,13 @@ export class ShoppingCartService {
 
   constructor(private db: AngularFireDatabase) { }
 
-  async getCart(): Promise<Observable<ShoppingCart>> {
+  async getCart(): Promise<Observable<ShoppingCart>>{
     let cartId = await this.getOrCreateCartId();
-    return this.db.object('/shopping-carts/' + cartId).valueChanges()
-      .pipe(map((x:any) => new ShoppingCart(x.items)));
+    return this.db.object('/shopping-carts/' + cartId ).valueChanges()
+  .pipe(map((x:any) => new ShoppingCart(x.items)));
   }
+  
+
 
   async addToCart(product: Product){
     this.updateItem(product, 1);
@@ -57,8 +59,24 @@ export class ShoppingCartService {
 
   private getItem(cartId, producId){
     return this.db.object('/shopping-carts/' + cartId + '/items/' + producId);
-
   }
+
+
+  // private async updateItem(product: Product, change: number) {
+  //   let cartId = await this.getOrCreateCartId();
+  //   let item$ = this.getItem(cartId, product.key);
+  //   item$.valueChanges().pipe(take(1)).subscribe(item => {
+  //     let quantity = item['quantity'] + change;
+  //     if (quantity === 0) item$.remove();
+  //     else item$.update({ 
+  //       title: product.title,
+  //       imageUrl: product.imageUrl,
+  //       price: product.price,
+  //       quantity: quantity
+  //     });
+  //   });
+  // }
+
 
   // Because the "getOrCreateCartId()" method is observable and return a promise we can use async or "then"
  
@@ -66,25 +84,19 @@ export class ShoppingCartService {
   private async updateItem(product: Product, change: number){
     const cartId = await this.getOrCreateCartId();
     const item$ = this.getItem(cartId, product.key);
+
     item$.valueChanges().pipe(take(1))
     .subscribe(item => {
-      let quantity = item['quantity'] + change;
-      if(quantity === 0) item$.remove();
+      console.log(item);
+
       
-      // else item$.update({
-      //   //product: product, 
-      //   title: product.title,
-      //   imageUrl: product.imageUrl,
-      //   price: product.price,
-      //   quantity: quantity
-      // });
       if (item) {
         item$.update({
           //product: product, 
           title: product.title,
           imageUrl: product.imageUrl,
           price: product.price,
-          quantity: quantity
+          quantity: item['quantity'] + change
         });
       } else {
         item$.set({ 
@@ -95,6 +107,10 @@ export class ShoppingCartService {
           quantity: 1 
         });
       }
+
+      let quantitys = item['quantity'] + change;
+      if (quantitys === 0) item$.remove();
+      
     });
   }
 }
